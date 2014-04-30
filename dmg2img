@@ -1,0 +1,88 @@
+#!/bin/bash
+# This script is created by Omkar Dhekne <ogdhekne@gmail.com>
+# Graphical Bash Script to 'dmg2img' tool
+# dmg2img is an Apple's compressed dmg  to  standard  (hfsplus)  image disk file conversion tool.
+# This file is licenced under GPL v3 and comes without WARRANTY ; USE AT YOUR OWN RISK.
+
+#------------------------------------------------------------------------#
+
+about()
+{
+zenity --title ".dmg to .img Converter" --info \
+--text="This script is created by Omkar Dhekne 'ogdhekne@yahoo.in'
+
+Graphical Bash Script to 'dmg2img' tool
+
+dmg2img is an Apple's compressed dmg  to  standard  (hfsplus)  image disk 
+file conversion tool.
+
+This file is licenced under GPL v3 and comes without WARRANTY ; USE AT YOUR OWN RISK."
+}
+
+#------------------------------------------------------------------------#
+
+convert()
+{
+
+(
+echo "10" ; sleep 1
+echo "# Conversion completed 10% " ; sleep 1
+echo "20" ; sleep 1
+echo "# Conversion completed 20% " ; sleep 1
+echo "50" ; sleep 1
+echo "# Conversion completed 50% " ; sleep 1
+echo "75" ; sleep 1
+echo "# Conversion completed 75% " ; sleep 1
+echo "100" ; sleep 1
+) |
+zenity --progress \
+  --title=".dmg to .img Converter" \
+  --text="Converting file please wait..." \
+  --percentage=0 \
+| dmg2img -s -v -V -i $if -o $of
+
+}
+
+#------------------------------------------------------------------------#
+
+start()
+{
+while :
+do
+cn=$(zenity  --width=300 --height=220 --list \
+  --title=".dmg to .img Converter" \
+  --column="No." --column="Steps"  \
+    1 Inputfile_.dmg \
+    2 Outputfile_.img \
+    3 Convert \
+    4 About \
+    5 Exit )
+
+	case $cn in
+	1) if=$(zenity --title "<dmg2img> imput .dmg file" --file-selection --filename="*.dmg") ;;
+	2) of=$(zenity --title "<dmg2img> output .img file" --file-selection --save --filename="*.img")
+ ;;
+	3) convert | tee $(zenity --title "<.dmg to .img Converter> Terminal Output" --text-info) ; zenity --title ".dmg to .img Converter" --notification --text "Conversion from .dmg to .img completed" ;;
+	4) about ;;
+	5) exit 0	
+	esac
+done
+
+}
+
+#------------------------------------------------------------------------#
+
+if ! [ -e "/usr/bin/dmg2img"] ;
+then
+   zenity --info\
+  --title ".dmg to .img converter" \
+  --text="Welcome to '.dmg to .img converter' " \
+; start
+
+else
+   zenity --error \
+--text="File missing: '/usr/bin/dmg2img' ; Please install this application to continue .. 
+
+In Ubuntu based distro : 'sudo apt-get install dmg2img' "
+exit 0
+fi

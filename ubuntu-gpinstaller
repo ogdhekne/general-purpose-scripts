@@ -1,0 +1,242 @@
+#!/bin/sh
+# This script is created by Omkar Dhekne <ogdhekne@gmail.com>
+#This script is free as free speech under GPL v3 licence.
+#You are free to modify/make changes , distribute to any one.
+#This script comes with NO WARRANTY ; USE AT YOUR OWN RISK.
+
+# Variable
+i1="alien youtube-dl vlc wine1.6 gimp vuze gparted gstreamer0.10-alsa gstreamer0.10-nice gstreamer0.10-plugins-base  gstreamer0.10-plugins-base-apps gstreamer0.10-plugins-good gstreamer0.10-pulseaudio gstreamer0.10-tools gstreamer0.10-x gstreamer1.0-alsa gstreamer1.0-clutter gstreamer1.0-fluendo-mp3 gstreamer1.0-libav gstreamer1.0-nice gstreamer1.0-plugins-bad gstreamer1.0-plugins-bad-faad gstreamer1.0-plugins-bad-videoparsers gstreamer1.0-plugins-base gstreamer1.0-plugins-base-apps gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly gstreamer1.0-pulseaudio gstreamer1.0-tools gstreamer1.0-x"
+
+url="https://launchpad.net/ubuntu-tweak/0.8.x/0.8.7/+download/ubuntu-tweak_0.8.7-1%7Etrusty2_all.deb"
+
+sources="# deb cdrom:[Ubuntu 14.04 LTS _Trusty Tahr_ - Release amd64 (20140417)]/ trusty main restricted
+
+# See http://help.ubuntu.com/community/UpgradeNotes for how to upgrade to
+# newer versions of the distribution.
+deb http://in.archive.ubuntu.com/ubuntu/ trusty main restricted
+deb-src http://in.archive.ubuntu.com/ubuntu/ trusty main restricted
+
+## Major bug fix updates produced after the final release of the
+## distribution.
+deb http://in.archive.ubuntu.com/ubuntu/ trusty-updates main restricted
+deb-src http://in.archive.ubuntu.com/ubuntu/ trusty-updates main restricted
+
+## N.B. software from this repository is ENTIRELY UNSUPPORTED by the Ubuntu
+## team. Also, please note that software in universe WILL NOT receive any
+## review or updates from the Ubuntu security team.
+deb http://in.archive.ubuntu.com/ubuntu/ trusty universe
+deb-src http://in.archive.ubuntu.com/ubuntu/ trusty universe
+deb http://in.archive.ubuntu.com/ubuntu/ trusty-updates universe
+deb-src http://in.archive.ubuntu.com/ubuntu/ trusty-updates universe
+
+## N.B. software from this repository is ENTIRELY UNSUPPORTED by the Ubuntu 
+## team, and may not be under a free licence. Please satisfy yourself as to 
+## your rights to use the software. Also, please note that software in 
+## multiverse WILL NOT receive any review or updates from the Ubuntu
+## security team.
+deb http://in.archive.ubuntu.com/ubuntu/ trusty multiverse
+deb-src http://in.archive.ubuntu.com/ubuntu/ trusty multiverse
+deb http://in.archive.ubuntu.com/ubuntu/ trusty-updates multiverse
+deb-src http://in.archive.ubuntu.com/ubuntu/ trusty-updates multiverse
+
+## N.B. software from this repository may not have been tested as
+## extensively as that contained in the main release, although it includes
+## newer versions of some applications which may provide useful features.
+## Also, please note that software in backports WILL NOT receive any review
+## or updates from the Ubuntu security team.
+
+deb http://security.ubuntu.com/ubuntu trusty-security main restricted
+deb-src http://security.ubuntu.com/ubuntu trusty-security main restricted
+deb http://security.ubuntu.com/ubuntu trusty-security universe
+deb-src http://security.ubuntu.com/ubuntu trusty-security universe
+deb http://security.ubuntu.com/ubuntu trusty-security multiverse
+deb-src http://security.ubuntu.com/ubuntu trusty-security multiverse
+
+## Uncomment the following two lines to add software from Canonical's
+## 'partner' repository.
+## This software is not part of Ubuntu, but is offered by Canonical and the
+## respective vendors as a service to Ubuntu users.
+deb http://archive.canonical.com/ubuntu trusty partner
+deb-src http://archive.canonical.com/ubuntu trusty partner
+
+## This software is not part of Ubuntu, but is offered by third-party
+## developers who want to ship their latest software.
+deb http://extras.ubuntu.com/ubuntu trusty main
+deb-src http://extras.ubuntu.com/ubuntu trusty main"
+
+#Functions
+desc()
+{
+zenity --title "Ubuntu Essentials installer" --info \
+--text="
+# Warning
+Install this script at once only else .bashrc file will be overwritten and commands will not work.
+
+# Requirement:
+   Ubuntu 14.04 LTS
+
+# Application which are going to install are :
+alien , youtube-dl , VLC , wine1.6 , gimp , vuze , ubuntu-tweak gparted , gstreamer for audio and video codecs
+
+
+# Useful Command Shortcuts for Debian based distro
+
+install : To install new applications.
+
+update : To update package repository.
+
+remove : To remove applications.
+
+autoremove : To autoremove obsolete packages.
+
+fix : To fix broken packages/ fulfill dependencies of packages.
+
+dl : Download files by putting url.
+
+vdodl : Download youtube or any video,audio from internet using url.
+
+check : Check internet connection.
+
+pro : Check application background/foreground process.
+
+srcinstall : Configure , compile and install source files.
+
+fin : Find files precisely.
+
+The copy of above text will be copied in a text file as useful_cmd.txt on your 'Desktop'"
+}
+
+installer()
+{
+echo "Enter the your password to install Ubuntu Essentials"
+
+sudo cat > /etc/apt/sources.list <<END
+$source
+END
+
+sudo apt-get update ; sudo apt-get install $i1
+
+wget -c $url ; sudo dpkg -i ubuntu-tweak*.deb
+}
+
+write()
+{
+cat >> ~/.bashrc  <<END
+
+# Useful Command Shortcuts for Debian based distro
+
+update()
+{
+echo "Updating packages please wait .."
+sudo apt-get update
+}
+
+install()
+{
+read -p "Enter the name of package to install :" i1
+sudo apt-get install $i1 -y
+}
+
+remove()
+{
+read -p "Enter the name of package to remove : " r1
+sudo apt-get remove $r1
+}
+
+autoremove()
+{
+sudo apt-get autoremove
+}
+
+fix()
+{
+sudo apt-get install -f
+}
+
+dl()
+{
+read -p "Enter the url for downloading : " dl1
+read -p "Enter the name for file :" dl2
+wget -c $dl1 -o $dl2
+}
+
+vdodl()
+{
+read -p "Enter the url to download video : " y1
+youtube-dl -c $y1 --write-auto-sub
+}
+
+check()
+{
+ping -c 3 google.com
+}	
+
+
+srcinstall()
+{
+echo "Enter the password to configure , compile and install source files :"
+sudo ./configure ; sudo make ; sudo make install
+}
+
+pro()
+{
+read -p "Enter keyword for process : " p1
+ps -ef | grep $p1
+}
+
+fin()
+{
+read -p "Enter file name to find : " f1
+read -p "Enter name for pattern : " f2
+find -name $f1 | grep $f2
+}
+
+convert()
+{
+read -p "Enter file name (.tar.* , .rpm) into .deb : " con
+sudo alien -d $con
+}	
+
+END
+
+cat > ~/Desktop/useful_cmd.txt  <<END
+Useful Command Shortcuts for Debian based distro
+
+install : To install new applications.
+
+update : To update package repository.
+
+remove : To remove applications.
+
+autoremove : To autoremove obsolete packages.
+
+fix : To fix broken packages/ fulfill dependencies of packages.
+
+dl : Download files by putting url.
+
+vdodl : Download youtube or any video,audio from internet using url.
+
+check : Check internet connection.
+
+pro : Check application background/foreground process.
+
+srcinstall : Configure , compile and install source files.
+
+fin : Find files precisely.
+
+convert : Convert any .tar.* and .rpm package into .deb package.
+
+The copy of above text will be copied in a text file as useful_cmd.txt on your 'Desktop'"
+END
+}
+
+over()
+{
+zenity --title "Ubuntu Essentials installer" \
+--info  \
+--text="Installation of essential packages is completed successfully."
+}
+
+# Execution of functions
+
+desc ; installer ; write ; over
