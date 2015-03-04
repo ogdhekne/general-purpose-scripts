@@ -1,0 +1,315 @@
+#!/bin/sh
+# This script is created by Omkar Dhekne <ogdhekne@gmail.com>
+#This script is free as free speech under GPL v3 licence.
+#You are free to modify/make changes , distribute to any one.
+#This script comes with NO WARRANTY ; USE AT YOUR OWN RISK.
+
+###################################################################################################
+####	ORACLE 11g 					                                       ####
+####	Mannual	Database Installation Shell Script	                                       ####
+###################################################################################################
+# After Installing Binaries in Base Directory , need is to install database.
+
+###################### 1. Prerequisites for installing binaries ####################
+
+fun1()
+{
+cd /
+dir2=$(zenity --entry --text "Enter Directory you want to create : ")
+mkdir $dir2
+user=$(zenity --entry --text "Enter username :")
+group=$(zenity --entry --text "Enter group : ")
+chmod -R 777 $dir2 & chown -R $user:$group $dir2
+zenity --info --text "Directory Created and Permissions are applied by root user"
+xhost +
+su - $user
+}
+
+################ 2. Installation of binaries ####################################################
+
+fun2()
+{
+kdialog --getopenfilename *.*
+./*.*
+}
+
+#Creation of directories in base directory#######################################################
+
+fun3()
+{
+base=$(zenity --entry --text "Enter your Oracle Base Directory :")
+sid=$(zenity --entry --text "Enter database SID :")
+shared=$(zenity --entry --text "Enter Desired Shared Pool Size ,minimum 100mb : ")
+
+#############  Listener Configuration ###########################################################
+
+host=$(zenity --entry --text "Enter Hostname : ")
+listener=$(zenity --entry --text "Enter listener name : ")
+port=$(zenity --entry --text "Enter Listener port no :")
+sys=$(zenity --entry --text "Enter Password for Sys User : ")
+sysman=$(zenity --entry --text "Enter Password for SysMan User :")
+
+#################################################################################################################
+
+size1=$(zenity --entry --text "Enter Datafile size : ")
+size2=$(zenity --entry --text "Enter Sysaux Datafile size : ")
+size3=$(zenity --entry --text "Enter default temp-tablespace size :")
+size4=$(zenity --entry --text "Enter undo tablespace size : ")
+size5=$(zenity --entry --text "Enter default tablespace size : ")
+size6=$(zenity --entry --text "Enter Log file size :")
+
+##################### 3. Directory creation in Oracle base #######################################################
+
+cd $base/
+
+mkdir -p data/$sid
+mkdir -p control/$sid
+mkdir -p log/$sid
+mkdir -p admin/$sid/adump
+mkdir -p fast_recovery_area
+}
+
+################## 4. initsid.ora file#############################################################################
+
+
+fun4()
+{
+cd $base/product/11.2.0/dbhome_1/dbs/
+
+cat > init$sid.ora <<END
+
+db_name=$sid
+compatible=11.2.0
+control_files='$base/control/$sid/$sid\_cont-01.ctl','$base/control/$sid/$sid\_cont-02.ctl'
+shared_pool_size=$shared
+undo_tablespace=undotbs
+END
+}
+
+#5. database creation file##########################################################################################
+
+fun5()
+{
+cd $base/product/11.2.0/dbhome_1/dbs/
+
+cat > cr_db.sql <<END
+
+create database $sid
+
+datafile '$base/data/$sid/sys_$sid.dbf' size $size1  autoextend on
+
+sysaux datafile '$base/data/$sid/saux_$sid.dbf' size $size2  autoextend on
+
+undo tablespace undotbs datafile '$base/data/$sid/temp_$sid.dbf' size $size3  autoextend on
+
+default temporary tablespace temp tempfile '$base/data/$sid/temp_$sid.dbf' size $size4  autoextend on
+
+default tablespace users datafile '$base/data/$sid/usr_$sid.dbf' size $size5
+
+logfile
+group 1 ('$base/log/$sid/$sid-01.log') size $size6 ,
+group 2 ('$base/log/$sid/$sid-02.log') size $size6
+controlfile reuse;
+END
+}
+
+# 6. Setting ORA Environment##########################################################################################
+
+fun6()
+{
+. oraenv <<EOF
+$sid
+$base/product/11.2.0/dbhome_1
+EOF
+}
+
+#7. SQL Prompt Database Creation######################################################################################
+
+fun7()
+{
+sqlplus / as sysdba <<EOF
+
+startup nomount;
+
+@$base/product/11.2.0/dbhome_1/dbs/cr_db.sql;
+
+select open_mode from v$\database;
+
+select instance_name from v$\instance;
+
+select instance from v$\instance;
+
+shut immediate;
+
+create spfile from pfile;
+
+startup;
+
+@$base/product/11.2.0/dbhome_1/rdbms/admin/catalog.sql;
+
+@$base/product/11.2.0/dbhome_1/rdbms/admin/catproc.sql;
+
+@$base/product/11.2.0/dbhome_1/sqlplus/admin/pupbld.sql;
+
+alter system set db_recovery_file_dest_size=4G;
+
+alter system set db_recovery_file_dest='$base/fast_recovery_area';
+
+exit;
+EOF
+}
+
+########################### 8. Password file Creation##############################################################
+
+fun8()
+{
+cd $base/product/11.2.0/dbhome_1/dbs/
+
+orapwd file\=orapw$sid password\=$sid force\=y entries\=5
+}
+
+######### 9. Create Lisntener #####################################################################################
+
+######### Listener.ora ###########################################################################################
+
+fun9()
+{
+cd $base/product/11.2.0/dbhome_1/network/admin/
+cat > listener.ora <<END
+# listener.ora Network Configuration File: $base/product/11.2.0/dbhome_1/network/admin/listener.ora
+# Generated by Oracle configuration tools.
+
+LISTENER =
+  (DESCRIPTION_LIST =
+    (DESCRIPTION =
+      (ADDRESS = (PROTOCOL = IPC)(KEY = EXTPROC$port))
+      (ADDRESS = (PROTOCOL = TCP)(HOST = $host)(PORT = $port))
+    )
+  )
+
+ADR_BASE_LISTENER = $base
+
+END
+
+######################### tnsnames.ora###########################################################################
+
+cat > tnsnames.ora <<END
+# tnsnames.ora Network Configuration File: $base/product/11.2.0/db_1/network/admin/tnsnames.ora
+# Generated by Oracle configuration tools.
+
+ORCL =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = $host)(PORT = $port))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = $sid)
+    )
+  )
+
+END
+
+########################### sqlnet.ora ##########################################################################
+
+cat > sqlnet.ora <<END
+
+# sqlnet.ora Network Configuration File: $base/product/11.2.0/db_1/network/admin/sqlnet.ora
+# Generated by Oracle configuration tools.
+
+NAMES.DIRECTORY_PATH= (TNSNAMES, EZCONNECT)
+
+ADR_BASE = $base
+
+END
+}
+
+#############10. Start lsnrctl start <listener>###################################################################
+
+fun10()
+{
+lsnrctl start $listener
+}
+
+####### 11. Create EM using emca -repos create#####################################################################
+
+fun11()
+{
+emca -repos create <<EOF
+$sid
+$port
+$sys
+$sysman
+Y
+
+EOF
+}
+
+##########12. Configure Em using emca -config dbcontrol db##########################################################
+
+fun12()
+{
+emca -config dbcontrol db <<EOF
+$sid
+$port
+$base/product/11.2.0/dbhome_1/network/admin
+EOF
+
+sqlplus / as sysdba <<EOF
+
+select username,account_status from dba_users;
+
+alter user sys identified by oracle;
+shut immediate;
+
+EOF
+echo "################### Mannual Database Creation Completed ###################################################"
+}
+
+########################13. Start EM ############################################################################
+
+fun13()
+{
+emctl start dbconsole
+}
+
+############################################## Main Menu ####################################################################
+
+while :
+do
+cn=$(zenity  --width=300 --height=220 --list \
+  --title="Oracle 11g Mannual Database Creation" \
+  --text "<b>ORACLE 11g Installation Main Menu</b>" \
+  --column="No." --column="Options"  \
+    1 "Creation of Base directories and giving permissions" \
+    2 "Installation of Binaries" \
+    3 "Directory Creation in Base directory <Exterally give permissions to base dir after dir creation>" \
+    4 "InitSID.ora file Creation." \
+    5 "cr_db.sql for Database Creation." \
+    6 "Set ORA ENVIRONMENT" \
+    7 "Database Creation in SQL> Prompt" \
+    8 "Creating Password file" \
+    9 "Creating Listener files." \
+    10 "Start Listener" \
+    11 "Create Enterprise Manager" \
+    12 "Configure Enterprise Manager" \
+    13 "Start EM" \
+    14 "Other Options" \
+    15 "Exit" )
+
+	case $cn in
+	1)  fun1 ;read ;;
+	2)  fun2 ;read ;;
+	3)  fun3 ;read ;;
+	4)  fun4 ;read ;;
+	5)  fun5 ;read ;;
+	6)  fun6 ;read ;;
+	7)  fun7 | cat >> tail.log | tail -f tail.log | zenity --text-info ; exit 0 ; zenity --info --text "Database is Created" read ;;
+	8)  fun8 ;read ;;
+	9)  fun9 ;read ;;
+	10) fun10 | cat >> tail.log | tail -f tail.log | zenity --text-info;exit 0 ; zenity --info --text "Listner is Started" read ;;
+	11) fun11 | cat >> tail.log | tail -f tail.log | zenity --text-info;exit 0 ; zenity --info --text "EM is Created" read ;;
+	12) fun12 | cat >> tail.log | tail -f tail.log | zenity --text-info;exit 0 ; zenity --info --text "EM is Configured" read ;;
+	13) fun13 | cat >> tail.log | tail -f tail.log | zenity --text-info;exit 0 ; zenity --info --text "EM is Started" read ;;
+	14) zenity --info --text "Are you nuts?? Leave installation go home you are drunk. "; exit 0 ; read ;;
+	15) exit 0 ;;
+	esac
+done
