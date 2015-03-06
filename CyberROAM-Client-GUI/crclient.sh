@@ -4,6 +4,7 @@
 
 #exports:
 export addr="./crclient"
+export username="user.name"
 
 while :
 do
@@ -16,8 +17,8 @@ cn=$(zenity  --width=300 --height=220 --list \
     3 Exit )
 
 	case $cn in
-	1) cd $addr ; ./crclient -u <user.name> -f ./crclient/crclient.conf -d ./Documents/crc.log ; chmod -R 777 ./Documents/crc.log ; zenity --info --text "$(tail -1 ~/Documents/crc.log)" ; exit 0;;
-	2) cd $addr ; ./crclient -l <user.name> -f ./crclient/crclient.conf -d ./Documents/crc.log ; chmod -R 777 ./Documents/crc.log ; zenity --info --text "$(tail -1 ~/Documents/crc.log)" ; exit 0;;
+	1) cd $addr ; ./crclient -u $username -f ./crclient/crclient.conf -d ./Documents/crc.log ; chmod -R 777 ./Documents/crc.log ; zenity --info --text "$(tail -1 ~/Documents/crc.log)" ; exit 0;;
+	2) cd $addr ; ./crclient -l $username -f ./crclient/crclient.conf -d ./Documents/crc.log ; chmod -R 777 ./Documents/crc.log ; zenity --info --text "$(tail -1 ~/Documents/crc.log)" ; exit 0;;
 	3) exit 0
 	esac
 done
