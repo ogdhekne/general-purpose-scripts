@@ -10,7 +10,7 @@ while :
 do
 cn=$(zenity  --width=300 --height=220 --list \
   --title="CyberROAM Login.." \
-  --text "<b>This app is not created by cyberROAM</b>" \
+  --text "<b>This script is not created by cyberROAM</b>" \
   --column="No." --column="Options"  \
     1 Login \
     2 Logout \
