@@ -15,5 +15,4 @@ README:
 4. oracle11gr2mannualdb_v2 :
 	This is version2 based on oracle11gr2mannualdb. (change: dialog used as zenity)
 
-5. crclient.sh :
-	This is graphical script for CyberROAM-Client (Linux/Unix).
+
