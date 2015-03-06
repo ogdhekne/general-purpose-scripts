@@ -11,3 +11,9 @@ README:
 
 3. ubuntu-gpinstaller :
 	This is a shell script to install those packages in Ubuntu 14.04 LTS that were needed and but forced to install each package mannually, such as VLC , alien , youtube-dl , gparted , ubuntu-tweak , wine1.6 , gimp , vuze and most important video and audio codecs needed for rhythmbox and totem to play audio and video files.
+
+4. oracle11gr2mannualdb_v2 :
+	This is version2 based on oracle11gr2mannualdb. (change: dialog used as zenity)
+
+5. crclient.sh :
+	This is graphical script for CyberROAM-Client (Linux/Unix).

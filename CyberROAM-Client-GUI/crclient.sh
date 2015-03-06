@@ -1,0 +1,23 @@
+#!/bin/bash
+#This script/app is not property of CyberROAM or any company affilates.
+#This script/app is licenced under GPL v2 ; url : http://www.gnu.org/licenses/gpl-2.0.html
+
+#exports:
+export addr="./crclient"
+
+while :
+do
+cn=$(zenity  --width=300 --height=220 --list \
+  --title="CyberROAM Login.." \
+  --text "<b>This app is not created by cyberROAM</b>" \
+  --column="No." --column="Options"  \
+    1 Login \
+    2 Logout \
+    3 Exit )
+
+	case $cn in
+	1) cd $addr ; ./crclient -u <user.name> -f ./crclient/crclient.conf -d ./Documents/crc.log ; chmod -R 777 ./Documents/crc.log ; zenity --info --text "$(tail -1 ~/Documents/crc.log)" ; exit 0;;
+	2) cd $addr ; ./crclient -l <user.name> -f ./crclient/crclient.conf -d ./Documents/crc.log ; chmod -R 777 ./Documents/crc.log ; zenity --info --text "$(tail -1 ~/Documents/crc.log)" ; exit 0;;
+	3) exit 0
+	esac
+done
