@@ -1,6 +1,8 @@
 #!/bin/bash
 # TABLESPACE UTILITY SCRIPT IN ORACLE DATABASE
-# Copyright (c) Omkar Dhekne ; ogdhekne@yahoo.in
+#This script is created by Omkar Dhekne <ogdhekne@gmail.com>
+#This script is free as free speech under GPL v2 licence.
+
 
 # DEFINE SET OPTION:
 cat > set.sql <<EOF
