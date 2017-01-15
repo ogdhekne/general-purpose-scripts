@@ -1,0 +1,22 @@
+#!/bin/bash
+#Search inside files
+#This script is created by Omkar Dhekne <ogdhekne@gmail.com>
+#This script is free as free speech under GPL v2 licence.
+
+
+export text="$1"
+export loc="$2"
+
+if [ "$1" = "" ] || [ "$2" = "" ] ;
+then
+cat <<EOF
+#Help: Search inside files:
+
+./sif <text to search> <location>
+
+ex:
+./sif linux .
+EOF
+else
+grep -i $text --color $(find $loc -type f)
+fi

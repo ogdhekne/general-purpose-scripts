@@ -1,0 +1,75 @@
+#!/bin/bash
+# TABLESPACE UTILITY SCRIPT IN ORACLE DATABASE
+# Copyright (c) Omkar Dhekne ; ogdhekne@yahoo.in
+
+# DEFINE SET OPTION:
+cat > set.sql <<EOF
+SET LONG 1000000
+set heading off
+EOF
+
+# ENV. VARIABLES:
+export dbn="$2"
+export tbn="$3"
+export dbf="$4"
+export tbs="$5"
+
+# FUNCTIONS:
+sql()
+{
+. oraenv &> /dev/null <<EOF
+$dbn
+EOF
+export ORACLE_BASE="$(find ${ORACLE_HOME:0:4} -maxdepth 3 -name oracle)"
+sqlplus -s / as sysdba @set.sql
+}
+
+db()
+{
+cat /etc/oratab
+}
+
+create()
+{
+echo "CREATE TABLESPACE "$tbn" DATAFILE '$ORACLE_BASE/oradata/$dbn/$dbf' SIZE $tbs;" | sql
+}
+
+alter()
+{
+echo "ALTER TABLESPACE "$tbn"  ADD DATAFILE '$dbf' SIZE $tbs;" | sql
+}
+
+status()
+{
+echo "SELECT TABLESPACE_NAME FROM DBA_TABLESPACES WHERE TABLESPACE_NAME=UPPER('$tbn');" | sql
+}
+
+drop()
+{
+echo "DROP TABLESPACE "$tbn" INCLUDING CONTENTS AND DATAFILES CASCADE CONSTRAINTS;" | sql
+}
+
+help()
+{
+cat <<EOF
+TABLESPACE UTILITY SCRIPT IN ORACLE DATABASE
+Copyright (c) Omkar Dhekne ; ogdhekne@yahoo.in
+
+USAGE:
+./tbs {db/create/alter/status/drop} {dbname} {tbname} {dbfname} {dbsizeM/G}
+Ex check existing databases : ./tbs db
+Ex tablespace create : ./tbs create orcl mytbs01 mytbs01.dbf 500M
+Ex tablespace alter : ./tbs alter orcl mytbs01 mytbs01db2.dbf 1024M
+Ex tablespace status : ./tbs status orcl mytbs01
+Ex tablespace drop : ./tbs drop orcl mytbs01
+EOF
+}
+
+# CHECK USER
+
+if test `whoami` == "oracle"
+then
+$1
+else
+exit 1
+fi
