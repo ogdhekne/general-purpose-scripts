@@ -18,3 +18,6 @@ README:
 
 6. sif :
     Utility script for searching text inside files. (becomes handy sometimes.)
+
+7. swapfilec :
+    Utility script for creating and deleting swapfile.

@@ -1,0 +1,55 @@
+#!/bin/bash
+#swapfile creation script:
+
+loc="$2"
+size="$3"
+
+create()
+{
+sudo fallocate -l $size $loc
+
+sudo chmod 0600 $loc
+
+sudo mkswap $loc
+
+sudo swapon $loc
+
+echo "$loc  none  swap  sw 0  0" | sudo tee --append /etc/fstab
+
+echo "vm.swappiness=100" | sudo tee --append /etc/sysctl.conf
+
+sudo sysctl -p
+
+sudo swapon -s
+
+free -m
+
+echo -e  "\n DONE"
+}
+
+delete()
+{
+sudo swapoff $loc
+
+sudo sed --in-place '/swap/d' /etc/fstab
+
+sudo rm -rf $loc
+
+sudo sed --in-place '/swappiness/d' /etc/sysctl.conf
+
+free -m
+
+echo -e  "\n DONE"
+}
+
+help()
+{
+cat <<EOF
+swapfile utility:
+
+create: ./swapfilec create /swap 1G
+delete: ./swapfilec delete /swap
+help:   ./swapfilec help
+EOF
+}
+$1
