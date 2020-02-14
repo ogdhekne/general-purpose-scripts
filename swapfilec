@@ -14,7 +14,7 @@ sudo mkswap $loc
 
 sudo swapon $loc
 
-echo "$loc  none  swap  sw 0  0" | sudo tee --append /etc/fstab
+echo "$loc none            swap    sw              0       0" | sudo tee --append /etc/fstab
 
 echo "vm.swappiness=100" | sudo tee --append /etc/sysctl.conf
 
