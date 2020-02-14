@@ -6,7 +6,9 @@ size="$3"
 
 create()
 {
-sudo fallocate -l $size $loc
+#sudo fallocate -l $size $loc
+
+sudo dd if=/dev/zero of=$loc bs=1 count=0 seek=$size
 
 sudo chmod 0600 $loc
 
