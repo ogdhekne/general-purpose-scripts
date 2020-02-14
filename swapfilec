@@ -59,5 +59,3 @@ then
 else
   $1
 fi
-
-
