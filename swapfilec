@@ -54,4 +54,12 @@ delete: ./swapfilec delete /swap
 help:   ./swapfilec help
 EOF
 }
-$1
+
+if [[ -z $1 ]]
+then
+  help
+else
+  $1
+fi
+
+
