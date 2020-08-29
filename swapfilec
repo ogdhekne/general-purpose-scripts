@@ -1,20 +1,22 @@
 #!/bin/bash
 #swapfile creation script:
 
-loc="$2"
+# Environment variables:
+location="$2"
 size="$3"
 
+# Create Swapfile
 create()
 {
-sudo dd if=/dev/zero of=$loc bs=1 count=0 seek=$size
+sudo dd if=/dev/zero of=$location bs=1 count=0 seek=$size
 
-sudo chmod 0600 $loc
+sudo chmod 0600 $location
 
-sudo mkswap $loc
+sudo mkswap $location
 
-sudo swapon $loc
+sudo swapon $location
 
-echo "$loc none            swap    sw              0       0" | sudo tee --append /etc/fstab
+echo "$location none            swap    sw              0       0" | sudo tee --append /etc/fstab
 
 echo "vm.swappiness=100" | sudo tee --append /etc/sysctl.conf
 
@@ -27,13 +29,14 @@ free -m
 echo -e  "\n DONE"
 }
 
+# Delete Swapfile.
 delete()
 {
-sudo swapoff $loc
+sudo swapoff $location
 
 sudo sed --in-place '/swap/d' /etc/fstab
 
-sudo rm -rf $loc
+sudo rm -rf $location
 
 sudo sed --in-place '/swappiness/d' /etc/sysctl.conf
 
@@ -42,10 +45,13 @@ free -m
 echo -e  "\n DONE"
 }
 
+# Print Help.
 help()
 {
 cat <<EOF
-swapfile utility:
++---------------------+
++  Swapfile Utility:  +
++---------------------+
 
 create: ./swapfilec create /swap 1G
 delete: ./swapfilec delete /swap
@@ -53,6 +59,7 @@ help:   ./swapfilec help
 EOF
 }
 
+# If no commandline argument is passed then print help.
 if [[ -z $1 ]]
 then
   help
