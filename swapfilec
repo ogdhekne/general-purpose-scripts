@@ -2,62 +2,64 @@
 #swapfile creation script:
 
 # Environment variables:
-location="$2"
-size="$3"
+  location="$2"
+  size="$3"
 
-# Create Swapfile
-create()
-{
-sudo dd if=/dev/zero of=$location bs=1 count=0 seek=$size
+# Function:
 
-sudo chmod 0600 $location
+  # Create Swapfile
+  create()
+  {
+  sudo dd if=/dev/zero of=$location bs=1 count=0 seek=$size
 
-sudo mkswap $location
+  sudo chmod 0600 $location
 
-sudo swapon $location
+  sudo mkswap $location
 
-echo "$location none            swap    sw              0       0" | sudo tee --append /etc/fstab
+  sudo swapon $location
 
-echo "vm.swappiness=100" | sudo tee --append /etc/sysctl.conf
+  echo "$location none            swap    sw              0       0" | sudo tee --append /etc/fstab
 
-sudo sysctl -p
+  echo "vm.swappiness=100" | sudo tee --append /etc/sysctl.conf
 
-sudo swapon -s
+  sudo sysctl -p
 
-free -m
+  sudo swapon -s
 
-echo -e  "\n DONE"
-}
+  free -m
 
-# Delete Swapfile.
-delete()
-{
-sudo swapoff $location
+  echo -e  "\n DONE"
+  }
 
-sudo sed --in-place '/swap/d' /etc/fstab
+  # Delete Swapfile.
+  delete()
+  {
+  sudo swapoff $location
 
-sudo rm -rf $location
+  sudo sed --in-place '/swap/d' /etc/fstab
 
-sudo sed --in-place '/swappiness/d' /etc/sysctl.conf
+  sudo rm -rf $location
 
-free -m
+  sudo sed --in-place '/swappiness/d' /etc/sysctl.conf
 
-echo -e  "\n DONE"
-}
+  free -m
 
-# Print Help.
-help()
-{
-cat <<EOF
-+---------------------+
-+  Swapfile Utility:  +
-+---------------------+
+  echo -e  "\n DONE"
+  }
 
-create: ./swapfilec create /swap 1G
-delete: ./swapfilec delete /swap
-help:   ./swapfilec help
+  # Print Help.
+  help()
+  {
+  cat <<EOF
+  +---------------------+
+  +  Swapfile Utility:  +
+  +---------------------+
+
+  create: ./swapfilec create /swap 1G
+  delete: ./swapfilec delete /swap
+  help:   ./swapfilec help
 EOF
-}
+  }
 
 # If no commandline argument is passed then print help.
 if [[ -z $1 ]]
