@@ -1,0 +1,60 @@
+#!/bin/bash
+#---------------------------------------------------------------------------------------------------------------#
+# Certificate Utility Script for Oracle public key infrastructure (orapki).                                     #
+# This script is licenced under GPLv3 ; you can get your copy from https://www.gnu.org/licenses/gpl-3.0.en.html #
+# (C) Omkar Dhekne ; ogdhekne@yahoo.in ; github: https://github.com/ogdhekne                                    #
+#---------------------------------------------------------------------------------------------------------------#
+
+# -- ENV:
+    
+
+
+# -- COLORS:
+
+	export RESET="\e[0m"
+	export GRAY="\e[100m"
+
+# -- FUNC:
+
+    create()
+    {
+        echo ""
+    }
+
+    delete()
+    {
+        echo ""
+    }
+
+    status()
+    {
+        echo ""
+    }
+
+    display()
+    {
+        echo ""
+    }
+
+    help()
+    {
+        cat <<EOF
+  +---------------------+
+  +  oracerts Utility:  +
+  +---------------------+
+
+  create:   ./oracerts create 
+  delete:   ./oracerts delete 
+  status:   ./oracerts status 
+  display:  ./oracerts display
+  help:     ./oracerts help
+EOF
+    }
+
+# If no commandline argument is passed then print help.
+    if [[ -z $1 ]]
+    then
+        help
+    else
+        $1
+    fi
