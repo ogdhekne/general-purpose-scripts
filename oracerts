@@ -6,7 +6,8 @@
 #---------------------------------------------------------------------------------------------------------------#
 
 # -- ENV:
-    
+    export cert_base=""
+    export file_name=""
 
 
 # -- COLORS:
@@ -16,9 +17,33 @@
 
 # -- FUNC:
 
-    create()
+    add()
     {
+        cat <<EOF
+  +---------------------+
+  +  oracerts Utility:  +
+  +---------------------+
+
+EOF
+        read -p "Enter base location of SSL certificates: " cert_base
+
         echo ""
+
+        read -p "Enter file name of .p7b extension: " file_name
+        
+        #openssl pkcs7 -print_certs -in certificatename.p7b -out certificatename.cer
+
+        #openssl pkcs7 -print_certs -in $cert_base/$file_name -out $cert_base/${file_name%????}.cer
+
+        openssl pkcs7 -print_certs -in $cert_base/$file_name -out $cert_base/${file_name::-4}.cer
+
+        keytool -import -trustcacerts -alias hyfi_1 -file Hyfi_certificate.crt -keystore Hyfi_certificate.jks
+
+        orapki wallet add -wallet /d01/oracle/PROD/db/tech_st/12.1.0/wallet -trusted_cert -cert "/d01/oracle/cert/Hyfi_certificate.jks" -pwd W@llet$01
+
+        orapki wallet jks_to_pkcs12 -wallet /d01/oracle/PROD/db/tech_st/12.1.0/wallet -pwd W@llet$01 -keystore /d01/oracle/cert/Hyfi_certificate.jks -jkspwd xor1246# -jsafe
+
+        
     }
 
     delete()
@@ -33,7 +58,7 @@
 
     display()
     {
-        echo ""
+        orapki wallet display -wallet . -pwd W@llet$01  -jsafe
     }
 
     help()
@@ -43,7 +68,7 @@
   +  oracerts Utility:  +
   +---------------------+
 
-  create:   ./oracerts create 
+  add:      ./oracerts add 
   delete:   ./oracerts delete 
   status:   ./oracerts status 
   display:  ./oracerts display

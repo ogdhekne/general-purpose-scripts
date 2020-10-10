@@ -1,22 +1,27 @@
 #!/bin/bash
-# install / add / start / stop / enable / disable secureboot.
+#---------------------------------------------------------------------------------------------------------------#
+# install / add / start / stop / enable / disable secureboot.                                                   #
+# This script is licenced under GPLv3 ; you can get your copy from https://www.gnu.org/licenses/gpl-3.0.en.html #
+# (C) Omkar Dhekne ; ogdhekne@yahoo.in ; github: https://github.com/ogdhekne                                    #
+#---------------------------------------------------------------------------------------------------------------#
 
-# ENV:
+# Environment variables:
     # secureboot signing keys location:
     export loc="/opt/secureboot"
 
     # signing module name: ex: vboxdrv / acpi-call
     export modulename="$2"
 
-# FUNC:
+# Functions:
     
+    # Install required packages:
     install()
     {
         # install required packages:
         sudo apt install -y mokutil openssl
     }
 
-
+    # Add signing secure boot signing keys:
     add()
     {   
         # if module name is not added key signing commands will not execute.
@@ -46,6 +51,7 @@
         fi
     }
 
+    # Sign module:
     signmodule()
     {
         # if module name is not added key signing commands will not execute.
@@ -65,18 +71,21 @@
         fi
     }
 
+    # Enable secure boot:
     enable()
     {
         # enable secureboot validation:
         sudo mokutil --enable-validation
     }
 
+    # Disable secure boot:
     disable()
     {
         # disable secureboot validation:
         sudo mokutil --disable-validation
     }
 
+    # Check secure boot status:
     status()
     {
         # if module name is not added key signing commands will not execute.
@@ -91,6 +100,7 @@
             # just blank line
             echo ""
 
+            # signing key enrollment status
             echo "Signing key enrollment status: $(mokutil --test-key $loc/MOK.der)"
 
             echo ""
@@ -101,6 +111,7 @@
         fi
     }
 
+    # Print this help:
     help()
     {
         cat <<EOF
@@ -119,7 +130,7 @@
 EOF
     }
 
-# EXEC:
+# Execute functions:
     # If no commandline argument is passed then print help.
     if [[ -z $1 ]]
     then
