@@ -119,14 +119,18 @@
         +     Secure boot key signing utility     +
         +-----------------------------------------+
 
-./secureboot.sh install                 :   Install required packages for secure boot key signing.
-./secureboot.sh add <modulename>        :   Creates, signs, registers keys.
-./secureboot.sh signmodule <modulename> :   Signs and registers keys.
-./secureboot.sh enable                  :   Enables secure boot.
-./secureboot.sh disable                 :   Disables secure boot.
-./secureboot.sh status                  :   Display status of secure boot and module signing.
-./secureboot.sh help                    :   Print this help.
+./secureboot.sh install                     :   Install required packages for secure boot key signing.
+./secureboot.sh add <module name>           :   Creates, signs, registers keys.
+./secureboot.sh signmodule <module name>    :   Signs and registers keys.
+./secureboot.sh enable                      :   Enables secure boot.
+./secureboot.sh disable                     :   Disables secure boot.
+./secureboot.sh status <module name>        :   Display status of secure boot and module signing.
+./secureboot.sh help                        :   Print this help.
 
+Examples:
+./secureboot.sh add vboxdrv
+./secureboot.sh signmodule acpi-call
+./secureboot.sh status vboxdrv
 EOF
     }
 
