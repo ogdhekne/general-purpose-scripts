@@ -1,0 +1,110 @@
+#!/bin/bash
+#---------------------------------------------------------------------------------------------------------------#
+# install / create / delete / restart / status / ui for canon2900 printer.                                      #
+# This script is licenced under GPLv3 ; you can get your copy from https://www.gnu.org/licenses/gpl-3.0.en.html #
+# (C) Omkar Dhekne ; ogdhekne@yahoo.in ; github: https://github.com/ogdhekne                                    #
+#---------------------------------------------------------------------------------------------------------------#
+
+    # notes:
+    # usb 		: //Canon/LBP2900?serial=0000A2B9PESv
+    # replacing ccp:/var/ccpd/fifo0 with ccp://localhost:59787.
+
+    # Install canon capt binary,
+    install()
+    {
+    cd ~/    
+
+    # Download canon driver
+    wget -c https://gdlp01.c-wss.com/gds/6/0100004596/05/linux-capt-drv-v271-uken.tar.gz
+
+    # Extract linux-capt-drv-v271-uken.tar.gz
+    tar -xvf ~/linux-capt-drv-v271-uken.tar.gz
+
+    cd ~/linux-capt-drv-v271-uken/64-bit_Driver/Debian/
+
+    # Install binary
+    sudo apt install libxml2:i386 cups ./*.deb
+    }
+
+    # Create printer entry for connected canon2900 printer.
+    create()
+    {
+        sudo mkdir -v /var/ccpd
+
+        sudo mkfifo /var/ccpd/fifo0
+
+        sudo mkdir -v /var/captmon
+
+        sudo /usr/sbin/lpadmin -p LBP2900 -m CNCUPSLBP2900CAPTK.ppd -v ccp://localhost:59787 -E
+
+#        sudo /usr/sbin/lpadmin -p LBP2900 -m CNCUPSLBP2900CAPTK.ppd -v ccp:/var/ccpd/fifo0 -E
+
+        sudo /usr/sbin/ccpdadmin -p LBP2900 -o /dev/usb/lp0
+
+        sudo /etc/init.d/ccpd restart
+
+        sudo systemctl restart cups
+    }
+
+    # Delete printer entry for canon2900 printer.
+    delete()
+    {
+        sudo /usr/sbin/lpadmin -x LBP2900
+    }
+
+    # Restart cups and ccpd service.
+    restart()
+    {
+        #CUPS
+        sudo systemctl restart cups
+
+        #CCPD
+        sudo /etc/init.d/ccpd restart
+    }
+
+    # Check status of cups, ccpd and printer.
+    status()
+    {
+        sudo systemctl status cups 
+        
+        sudo /etc/init.d/ccpd status
+    
+        sudo /usr/sbin/ccpdadmin -p LBP2900 -o /dev/usb/lp0
+
+        
+
+    }
+
+    # Open canon status ui for canon2900 printer.
+    ui()
+    {
+        # Check for errors also.
+        captstatusui -P LBP2900 -e
+    }
+
+    # Print this help:
+    help()
+    {
+        cat <<EOF
+        +-----------------------------------------+
+        +     Canon Printer management utility    +
+        +-----------------------------------------+
+
+./canon install             :   Install canon printer binary debian based.
+./canon create              :   Add Canon Printer connected to computer.
+./canon delete              :   Delete already configured printer.
+./canon restart             :   Restart canon printer service.
+./canon status              :   Check status of printer and service.
+./canon help                :   Print this help.
+
+EOF
+    }
+
+# Execute functions:
+    # If no commandline argument is passed then print help.
+    if [[ -z $1 ]]
+    then
+        help
+    else
+        $1
+    fi

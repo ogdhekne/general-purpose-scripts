@@ -1,0 +1,91 @@
+#!/bin/bash
+#---------------------------------------------------------------------------------------------------------------#
+# Install and configure scan-server for exiting scanners.                                                       #
+# This script is licenced under GPLv3 ; you can get your copy from https://www.gnu.org/licenses/gpl-3.0.en.html #
+# (C) Omkar Dhekne ; ogdhekne@yahoo.in ; github: https://github.com/ogdhekne                                    #
+#---------------------------------------------------------------------------------------------------------------#
+
+# Environment variables:
+export IP=$(route -n | awk '{print $1}' | tail -1)
+export SUB=$(ip a | grep enp3s0 | awk '{print $2}' | tail -1 | cut -f2 -d"/")
+
+# Install sane
+sudo apt install sane -y
+
+# Create temp directory
+mkdir  -v ~/temp
+
+#-----------------------------------------------#
+
+# Create sane file.
+cat > ~/temp/saned.conf << EOF
+# saned.conf
+# Configuration for the saned daemon
+
+## Daemon options
+# Port range for the data connection. Choose a range inside [1024 - 65535].
+# Avoid specifying too large a range, for performance reasons.
+#
+# ONLY use this if your saned server is sitting behind a firewall. If your
+# firewall is a Linux machine, we strongly recommend using the
+# Netfilter nf_conntrack_sane connection tracking module instead.
+#
+data_portrange = 10000 - 10100
+
+
+## Access list
+# A list of host names, IP addresses or IP subnets (CIDR notation) that
+# are permitted to use local SANE devices. IPv6 addresses must be enclosed
+# in brackets, and should always be specified in their compressed form.
+#
+# The hostname matching is not case-sensitive.
+
+$IP/$SUB
+
+#192.168.1.0/24
+
+#scan-client.somedomain.firm
+#192.168.0.1
+#192.168.0.1/29
+#[2001:db8:185e::42:12]
+#[2001:db8:185e::42:12]/64
+
+# NOTE: /etc/inetd.conf (or /etc/xinetd.conf) and
+# /etc/services must also be properly configured to start
+# the saned daemon as documented in saned(8), services(4)
+# and inetd.conf(4) (or xinetd.conf(5)).
+EOF
+
+# Copy saned.conf to /etc/sane.d/saned.conf
+cp ~/temp/saned.conf /etc/sane.d/saned.conf
+
+#-----------------------------------------------#
+
+# Create saned file
+cat > ~/temp/saned << EOF
+# Defaults for the saned initscript, from sane-utils
+
+# To enable under systemd please read README.Debian
+# Set to yes to start saned under SysV
+RUN=yes
+
+# Set to the user saned should run as
+RUN_AS_USER=saned
+EOF
+
+# Copy saned file to /etc/default/saned
+cp ~/temp/saned /etc/default/saned
+
+#-----------------------------------------------#
+
+# Create user sane and start,enable saned service.
+{
+sudo adduser saned lp
+sudo service saned restart
+sudo service sane restart
+sudo service saned status
+sudo service saned start
+sudo systemctl start saned.socket
+sudo systemctl status saned.socket
+sudo systemctl enable saned.socket
+}
