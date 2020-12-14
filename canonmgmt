@@ -23,7 +23,10 @@
     cd ~/linux-capt-drv-v271-uken/64-bit_Driver/Debian/
 
     # Install binary
-    sudo apt install libxml2:i386 cups ./*.deb
+    sudo apt install libxml2:i386 portreserve gsfonts gsfonts-other cups ./*.deb
+
+    # gsfonts-X11 
+
     }
 
     # Create printer entry for connected canon2900 printer.
@@ -41,9 +44,7 @@
 
         sudo /usr/sbin/ccpdadmin -p LBP2900 -o /dev/usb/lp0
 
-        sudo /etc/init.d/ccpd restart
-
-        sudo systemctl restart cups
+        sudo systemctl restart -l cups ccpd
     }
 
     # Delete printer entry for canon2900 printer.
@@ -55,11 +56,10 @@
     # Restart cups and ccpd service.
     restart()
     {
-        #CUPS
-        sudo systemctl restart cups
+        #CUPS & CCPD
+        sudo systemctl restart -l cups ccpd
 
-        #CCPD
-        sudo /etc/init.d/ccpd restart
+        #sudo /etc/init.d/ccpd restart
     }
 
     # Check status of cups, ccpd and printer.
@@ -70,9 +70,6 @@
         sudo /etc/init.d/ccpd status
     
         sudo /usr/sbin/ccpdadmin -p LBP2900 -o /dev/usb/lp0
-
-        
-
     }
 
     # Open canon status ui for canon2900 printer.
