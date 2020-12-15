@@ -17,8 +17,15 @@
     # Install required packages:
     install()
     {
-        # install required packages:
-        sudo apt install -y mokutil openssl
+        deb()
+        {
+            sudo apt install mokutil openssl -y
+        }
+        
+        rpm()
+        {
+            sudo dnf install mokutil openssl -y
+        }
     }
 
     # Add signing secure boot signing keys:
@@ -52,7 +59,7 @@
     }
 
     # Sign module:
-    signmodule()
+    sign()
     {
         # if module name is not added key signing commands will not execute.
         if [ -z "$modulename" ]
@@ -119,12 +126,12 @@
         +     Secure boot key signing utility     +
         +-----------------------------------------+
 
-./secureboot.sh install                     :   Install required packages for secure boot key signing.
-./secureboot.sh add <module name>           :   Creates, signs, registers keys.
-./secureboot.sh signmodule <module name>    :   Signs and registers keys.
+./secureboot.sh install (deb/rpm)           :   Install secure boot key signing packages for debian / fedora based distro.
+./secureboot.sh add (module name)           :   Creates, signs, registers keys.
+./secureboot.sh sign (module name)          :   Signs and registers keys.
 ./secureboot.sh enable                      :   Enables secure boot.
 ./secureboot.sh disable                     :   Disables secure boot.
-./secureboot.sh status <module name>        :   Display status of secure boot and module signing.
+./secureboot.sh status (module name)        :   Display status of secure boot and module signing.
 ./secureboot.sh help                        :   Print this help.
 
 Examples:
@@ -140,5 +147,5 @@ EOF
     then
         help
     else
-        $1
+        $1 ; $2
     fi
