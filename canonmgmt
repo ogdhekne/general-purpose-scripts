@@ -20,13 +20,21 @@
     # Extract linux-capt-drv-v271-uken.tar.gz
     tar -xvf ~/linux-capt-drv-v271-uken.tar.gz
 
-    cd ~/linux-capt-drv-v271-uken/64-bit_Driver/Debian/
+        deb()
+        {
+            cd ~/linux-capt-drv-v271-uken/64-bit_Driver/Debian/
 
-    # Install binary
-    sudo apt install libxml2:i386 portreserve gsfonts gsfonts-other cups ./*.deb
+            # Install binary
+            sudo apt install libxml2:i386 portreserve gsfonts gsfonts-other cups ./*.deb -y
+        }
+    
+        rpm()
+        {
+            cd ~/linux-capt-drv-v271-uken/64-bit_Driver/RPM/
 
-    # gsfonts-X11 
-
+            # Install binary
+            sudo dnf install libxml2:i386 portreserve gsfonts gsfonts-other cups ./*.rpm -y
+        }
     }
 
     # Create printer entry for connected canon2900 printer.
@@ -87,12 +95,12 @@
         +     Canon Printer management utility    +
         +-----------------------------------------+
 
-./canon install             :   Install canon printer binary debian based.
-./canon create              :   Add Canon Printer connected to computer.
-./canon delete              :   Delete already configured printer.
-./canon restart             :   Restart canon printer service.
-./canon status              :   Check status of printer and service.
-./canon help                :   Print this help.
+./canonmgmt install (deb/rpm)   :   Install canon printer binary debian based.
+./canonmgmt create              :   Add Canon Printer connected to computer.
+./canonmgmt delete              :   Delete already configured printer.
+./canonmgmt restart             :   Restart canon printer service.
+./canonmgmt status              :   Check status of printer and service.
+./canonmgmt help                :   Print this help.
 
 EOF
     }
@@ -103,5 +111,5 @@ EOF
     then
         help
     else
-        $1
+        $1 ; $2
     fi
