@@ -95,7 +95,7 @@
         +     Canon Printer management utility    +
         +-----------------------------------------+
 
-./canonmgmt install (deb/rpm)   :   Install canon printer binary debian based.
+./canonmgmt install (deb/rpm)   :   Install canon printer binary debian / fedora based.
 ./canonmgmt create              :   Add Canon Printer connected to computer.
 ./canonmgmt delete              :   Delete already configured printer.
 ./canonmgmt restart             :   Restart canon printer service.
