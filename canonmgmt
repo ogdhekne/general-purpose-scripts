@@ -66,8 +66,6 @@
     {
         #CUPS & CCPD
         sudo systemctl restart -l cups ccpd
-
-        #sudo /etc/init.d/ccpd restart
     }
 
     # Check status of cups, ccpd and printer.
@@ -95,7 +93,7 @@
         +     Canon Printer management utility    +
         +-----------------------------------------+
 
-./canonmgmt install (deb/rpm)   :   Install canon printer binary debian / fedora based.
+./canonmgmt install (deb/rpm)   :   Install canon printer binary for debian / fedora based distro.
 ./canonmgmt create              :   Add Canon Printer connected to computer.
 ./canonmgmt delete              :   Delete already configured printer.
 ./canonmgmt restart             :   Restart canon printer service.
