@@ -136,7 +136,7 @@
 
 Examples:
 ./secureboot.sh add vboxdrv
-./secureboot.sh signmodule acpi-call
+./secureboot.sh sign acpi-call
 ./secureboot.sh status vboxdrv
 EOF
     }
@@ -147,5 +147,5 @@ EOF
     then
         help
     else
-        $1 ; $2
+        $1
     fi
