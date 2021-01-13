@@ -31,8 +31,7 @@ general-purpose-scripts/
 
 2. dmg2img: Wrapper over cli application dmg2img.
 
-3. oracle:
-
+3. oracle: Shell scripts for oracle db.
 
 3.1. oracerts: Certificate management for Oracle wallets.
 
