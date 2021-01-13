@@ -32,20 +32,20 @@ general-purpose-scripts/
 2. dmg2img: Wrapper over cli application dmg2img.
 
 3. oracle:
-	3.1 oracerts: Certificate management for Oracle wallets.
-	3.2 oracle11gr2mannualdb: Manual database creation for Oracle 11g R2 database
-	3.3 oracle11gr2mannualdb_v2: Manual database creation for Oracle 11g R2 database - v2
-	3.4 start-stop:
-		3.4.1 init.d: Start / Stop oracle db using init service.
-			3.4.1.1 oradb
-		3.4.2 systemd: Start / Stop oracle db using systemd service.
-			3.4.2.1 oracle.service
-			3.4.2.2 oradb
-	3.5 tbs: Utility script for creating , modifying and deleting tablespace.
+	3.1. oracerts: Certificate management for Oracle wallets.
+	3.2. oracle11gr2mannualdb: Manual database creation for Oracle 11g R2 database
+	3.3. oracle11gr2mannualdb_v2: Manual database creation for Oracle 11g R2 database - v2
+	3.4. start-stop:
+		3.4.1. init.d: Start / Stop oracle db using init service.
+			3.4.1.1. oradb
+		3.4.2. systemd: Start / Stop oracle db using systemd service.
+			3.4.2.1. oracle.service
+			3.4.2.2. oradb
+	3.5. tbs: Utility script for creating , modifying and deleting tablespace.
 
 4. osp: Open Streaming Server - Single Node / Multi Node.
-	4.1 osp-multi-node.sh
-	4.2 osp.sh
+	4.1. osp-multi-node.sh
+	4.2. osp.sh
 
 5. README.md: 
 
