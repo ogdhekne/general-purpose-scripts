@@ -33,6 +33,7 @@ general-purpose-scripts/
 
 3. oracle:
 
+
 3.1. oracerts: Certificate management for Oracle wallets.
 
 3.2. oracle11gr2mannualdb: Manual database creation for Oracle 11g R2 database
