@@ -1,0 +1,76 @@
+#!/bin/bash
+# processname: oracle
+# chkconfig: 234 20 80
+# ORACLE DATABASE 11g / 12c startup/shutdown script.
+# (c) Omkar Dhekne ; ogdhekne@yahoo.in ; version:1.2
+# Licence GPLv2 : https://www.gnu.org/licenses/old-licenses/gpl-3.0.en.html
+
+export user="oracle"
+export sid=$(cat /etc/oratab | tail -1 | awk -F '[:]' '{print $1}')
+export dbpath=$(cat /etc/oratab | tail -1 | awk -F '[:]' '{print $2}')
+export num=$(ps -ef | grep -e $sid -e tns | wc -l)
+export listener=$(cat $dbpath/network/admin/listener.ora | grep = | awk 'NR==1{print $1}')
+export reset='\x1b[0m'
+export red='\x1b[1;31m'
+export green='\x1b[1;32m'
+
+start()
+{
+su - $user -c "
+. oraenv <<EOF
+$sid
+EOF
+
+sqlplus / as sysdba <<EOF
+startup
+EOF
+
+lsnrctl start $listener
+"
+}
+
+stop()
+{
+su - $user -c "
+. oraenv <<EOF
+$sid
+EOF
+
+sqlplus / as sysdba <<EOF
+shutdown immediate
+EOF
+
+lsnrctl stop $listener
+"
+}
+
+status()
+{
+if test "$num" -eq "1"
+then
+    echo -e "DB: ${red:-}DOWN${reset:-}"
+else
+    echo -e "DB: ${green:-}UP${reset:-}"
+fi
+}
+
+help()
+{
+cat <<EOF
+# ORACLE DATABASE 11g / 12c startup/shutdown script.
+# (c) Omkar Dhekne ; ogdhekne@yahoo.in ; Version:1.2
+# Licence GPLv2 : https://www.gnu.org/licenses/old-licenses/gpl-3.0.en.html
+
+./oradb <start/stop/status/help>
+
+Startup : ./oradb start
+
+Shutdown : ./oradb stop
+
+Status : ./oradb status
+
+Help : ./oradb help
+EOF
+}
+
+$1

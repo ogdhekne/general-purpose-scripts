@@ -1,0 +1,14 @@
+[Unit]
+Description= Oracle Database 12c Start / Stop Service
+After=network.target
+
+[Service]
+User=oracle
+Type=oneshot
+ExecStart=/usr/local/bin/oradb start
+RemainAfterExit=true
+ExecStop=/usr/local/bin/oradb stop
+StandardOutput=journal
+
+[Install]
+WantedBy=multi-user.target
