@@ -1,30 +1,30 @@
 # README:
 
 ## Current directory structure:
-general-purpose-scripts/
-├── canonmgmt
-├── dmg2img
-├── laptop-battery-mgmt.sh
-├── oracle
-│   ├── oracerts
-│   ├── oracle11gr2mannualdb
-│   ├── oracle11gr2mannualdb_v2
-│   ├── start-stop
-│   │   ├── init.d
-│   │   │   └── oradb
-│   │   └── systemd
-│   │       ├── oracle.service
-│   │       └── oradb
-│   └── tbs
-├── osp
-│   ├── osp-multi-node.sh
-│   └── osp.sh
-├── README.md
-├── scanserv
-├── secureboot.sh
-├── sif
-├── swapfilec
-└── ubuntu-gpinstaller
+	general-purpose-scripts/
+	├── canonmgmt
+	├── dmg2img
+	├── laptop-battery-mgmt.sh
+	├── oracle
+	│   ├── oracerts
+	│   ├── oracle11gr2mannualdb
+	│   ├── oracle11gr2mannualdb_v2
+	│   ├── start-stop
+	│   │   ├── init.d
+	│   │   │   └── oradb
+	│   │   └── systemd
+	│   │       ├── oracle.service
+	│   │       └── oradb
+	│   └── tbs
+	├── osp
+	│   ├── osp-multi-node.sh
+	│   └── osp.sh
+	├── README.md
+	├── scanserv
+	├── secureboot.sh
+	├── sif
+	├── swapfilec
+	└── ubuntu-gpinstaller
 
 ### Description:
 1. canonmgmt: Canon LBP2900b Laser print management utility for deb/rpm.
