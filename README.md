@@ -1,6 +1,4 @@
-# README:
-
-## Current directory structure:
+#### Current directory structure:
 <pre>
 general-purpose-scripts/
 ├── canonmgmt
@@ -28,7 +26,7 @@ general-purpose-scripts/
 └── ubuntu-gpinstaller
 </pre>
 
-### Description:
+#### Description:
 1. canonmgmt: Canon LBP2900b Laser print management utility for deb/rpm.
 
 2. dmg2img: Wrapper over cli application dmg2img.
