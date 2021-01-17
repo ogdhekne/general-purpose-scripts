@@ -7,7 +7,7 @@
 
 # Environment variables:
     # secureboot signing keys location:
-    export loc="/opt/secureboot"
+    export loc="/var/lib/shim-signed/mok" #/opt/secureboot"
 
     # signing module name: ex: vboxdrv / acpi-call
     export modulename="$2"
@@ -136,8 +136,10 @@
 
 Examples:
 ./secureboot.sh add vboxdrv
-./secureboot.sh sign acpi-call
+./secureboot.sh sign vboxdrv
 ./secureboot.sh status vboxdrv
+./secureboot.sh sign acpi-call
+./secureboot.sh status acpi-call
 EOF
     }
 
