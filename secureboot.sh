@@ -15,18 +15,16 @@
 # Functions:
     
     # Install required packages:
-    install()
+    install-deb()
     {
-        deb()
-        {
-            sudo apt install mokutil openssl -y
-        }
-        
-        rpm()
-        {
-            sudo dnf install mokutil openssl -y
-        }
+        sudo apt install mokutil openssl -y
     }
+        
+    install-rpm()
+    {
+        sudo dnf install mokutil openssl -y
+    }
+    
 
     # Add signing secure boot signing keys:
     add()
@@ -38,7 +36,7 @@
         else 
 
             # create signing key location:
-            sudo mkdir $loc
+            sudo mkdir -pv $loc
 
             # provide user owner permission to signing key location:
             sudo chown -R $USER: $loc
@@ -126,7 +124,7 @@
         +     Secure boot key signing utility     +
         +-----------------------------------------+
 
-./secureboot.sh install (deb/rpm)           :   Install secure boot key signing packages for debian / fedora based distro.
+./secureboot.sh install-deb/install-rpm     :   Install secure boot key signing packages for debian / fedora based distro.
 ./secureboot.sh add (module name)           :   Creates, signs, registers keys.
 ./secureboot.sh sign (module name)          :   Signs and registers keys.
 ./secureboot.sh enable                      :   Enables secure boot.
