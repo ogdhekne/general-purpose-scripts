@@ -21,7 +21,7 @@
         # Below command for debian based distro.:
         fallocate -l $size $location
     elif [ "$ID_LIKE" = "rhel fedora" ]; then
-        # Below commad for rhel based distro.:
+        # Below command for rhel/fedora based distro.:
         dd if=/dev/zero of=$location bs=1 count=0 seek=$size
     fi
 
