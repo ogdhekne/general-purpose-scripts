@@ -68,10 +68,13 @@
   +---------------------+
   +  Swapfile Utility:  +
   +---------------------+
+  create:  $0 create <location> <size>
+  delete:  $0 delete <location>
+  help:    $0 help  
 
+  Examples:
   create:  $0 create /swap 1G
   delete:  $0 delete /swap
-  help:    $0 help
 EOF
   }
 
