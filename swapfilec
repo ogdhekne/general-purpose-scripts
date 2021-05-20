@@ -61,6 +61,23 @@
   echo -e  "\n DONE"
   }
 
+  # Check status:
+  status()
+  {
+  cat << EOF
+  +---------------------+
+  +  Swapfile Utility:  +
+  +---------------------+
+EOF
+
+  echo -e "\n Memory and Swap utilization:"
+  free -m
+
+  echo -e "\n Current Swap locations:"
+  swapon -s
+  }
+
+
   # Print Help.
   help()
   {
@@ -70,6 +87,7 @@
   +---------------------+
   create:  $0 create <location> <size>
   delete:  $0 delete <location>
+  status:  $0 status
   help:    $0 help  
 
   Examples:
@@ -86,3 +104,4 @@ EOF
   else
     $1
   fi
+  
