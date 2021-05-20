@@ -14,21 +14,21 @@
   # Create Swapfile
   create()
   {
-  sudo dd if=/dev/zero of=$location bs=1 count=0 seek=$size
+  dd if=/dev/zero of=$location bs=1 count=0 seek=$size
 
-  sudo chmod 0600 $location
+  chmod 0600 $location
 
-  sudo mkswap $location
+  mkswap $location
 
-  sudo swapon $location
+  swapon $location
 
-  echo "$location none            swap    sw              0       0" | sudo tee --append /etc/fstab
+  echo "$location none            swap    sw              0       0" | tee --append /etc/fstab
 
-  echo "vm.swappiness=100" | sudo tee --append /etc/sysctl.conf
+  echo "vm.swappiness=100" | tee --append /etc/sysctl.conf
 
-  sudo sysctl -p
+  sysctl -p
 
-  sudo swapon -s
+  swapon -s
 
   free -m
 
@@ -38,13 +38,13 @@
   # Delete Swapfile.
   delete()
   {
-  sudo swapoff $location
+  swapoff $location
 
-  sudo sed --in-place '/swap/d' /etc/fstab
+  sed --in-place '/swap/d' /etc/fstab
 
-  sudo rm -rf $location
+  rm -rf $location
 
-  sudo sed --in-place '/swappiness/d' /etc/sysctl.conf
+  sed --in-place '/swappiness/d' /etc/sysctl.conf
 
   free -m
 
@@ -59,9 +59,9 @@
   +  Swapfile Utility:  +
   +---------------------+
 
-  create: ./swapfilec create /swap 1G
-  delete: ./swapfilec delete /swap
-  help:   ./swapfilec help
+  create:  $0 create /swap 1G
+  delete:  $0 delete /swap
+  help:    $0 help
 EOF
   }
 
