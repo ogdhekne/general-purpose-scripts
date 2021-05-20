@@ -59,9 +59,9 @@
   +  Swapfile Utility:  +
   +---------------------+
 
-  create:  $0 create /swap 1G
-  delete:  $0 delete /swap
-  help:    $0 help
+  create: $0 create /swap 1G
+  delete: $0 delete /swap
+  help:   $0 help
 EOF
   }
 
