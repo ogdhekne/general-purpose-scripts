@@ -8,6 +8,7 @@
 # Environment variables:
   location="$2"
   size="$3"
+  rev="v1.1"
 
 # Functions:
 
@@ -65,9 +66,9 @@
   status()
   {
   cat << EOF
-  +---------------------+
-  +  Swapfile Utility:  +
-  +---------------------+
+  +--------------------------+
+  +  Swapfile Utility: $rev  +
+  +--------------------------+
 EOF
 
   echo -e "\n Memory and Swap utilization:"
@@ -82,9 +83,9 @@ EOF
   help()
   {
   cat <<EOF
-  +---------------------+
-  +  Swapfile Utility:  +
-  +---------------------+
+  +--------------------------+
+  +  Swapfile Utility: $rev  +
+  +--------------------------+
   create:  $0 create <location> <size>
   delete:  $0 delete <location>
   status:  $0 status
@@ -104,4 +105,3 @@ EOF
   else
     $1
   fi
-  
