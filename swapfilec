@@ -14,7 +14,8 @@
   # Create Swapfile
   create()
   {
-  dd if=/dev/zero of=$location bs=1 count=0 seek=$size
+  # dd if=/dev/zero of=$location bs=1 count=0 seek=$size
+  fallocate -l $size $location
 
   chmod 0600 $location
 
