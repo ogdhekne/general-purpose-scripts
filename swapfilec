@@ -14,7 +14,9 @@
   # Create Swapfile
   create()
   {
-  # dd if=/dev/zero of=$location bs=1 count=0 seek=$size
+  # dd if=/dev/zero of=$location bs=1 count=0 seek=$size # deleted this line as not compatible with debian based distro.
+  
+  # Below command for debian based distro.:
   fallocate -l $size $location
 
   chmod 0600 $location
@@ -27,10 +29,13 @@
 
   echo "vm.swappiness=100" | tee --append /etc/sysctl.conf
 
+  echo -e "\n Kernel Parameters:"
   sysctl -p
 
+  echo -e "\n Current Swap locations:"
   swapon -s
 
+  echo -e "\n Memory and Swap utilization:"
   free -m
 
   echo -e  "\n DONE"
@@ -47,6 +52,10 @@
 
   sed --in-place '/swappiness/d' /etc/sysctl.conf
 
+  echo -e "\n Current Swap locations:"
+  swapon -s
+
+  echo -e "\n Memory and Swap utilization:"
   free -m
 
   echo -e  "\n DONE"
