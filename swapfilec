@@ -9,16 +9,21 @@
   location="$2"
   size="$3"
   rev="v1.1"
+  source /etc/os-release
 
 # Functions:
 
   # Create Swapfile
   create()
   {
-  # dd if=/dev/zero of=$location bs=1 count=0 seek=$size # deleted this line as not compatible with debian based distro.
-  
-  # Below command for debian based distro.:
-  fallocate -l $size $location
+    # Commad will change based on distro:
+    if [ "$ID_LIKE" = "debian" ]; then
+        # Below command for debian based distro.:
+        fallocate -l $size $location
+    elif [ "$ID_LIKE" = "rhel fedora" ]; then
+        # Below commad for rhel based distro.:
+        dd if=/dev/zero of=$location bs=1 count=0 seek=$size
+    fi
 
   chmod 0600 $location
 
