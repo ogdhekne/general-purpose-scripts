@@ -115,7 +115,7 @@ EOF
   create:  $0 create <LOCATION> <SIZE>
   delete:  $0 delete <LOCATION>
   status:  $0 status
-  help:    $0 help  
+  help:    $0 help
 
   Examples:
   create:  $0 create /swap 1G

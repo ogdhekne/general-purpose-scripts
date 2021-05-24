@@ -36,22 +36,22 @@
         else 
 
             # create signing key location:
-            sudo mkdir -pv $loc
+            sudo mkdir -pv "$loc"
 
             # provide user owner permission to signing key location:
-            sudo chown -R $USER: $loc
+            sudo chown -R "$USER": "$loc"
 
             # create signing keys:
-            openssl req -new -x509 -newkey rsa:2048 -keyout $loc/MOK.priv -outform DER -out $loc/MOK.der -nodes -days 36500 -subj "/CN=$(hostname)/"
+            openssl req -new -x509 -newkey rsa:2048 -keyout "$loc"/MOK.priv -outform DER -out "$loc"/MOK.der -nodes -days 36500 -subj "/CN=$(hostname)/"
 
             # sign module:
-            sudo /usr/src/linux-headers-$(uname -r)/scripts/sign-file sha256 $loc/MOK.priv $loc/MOK.der $(modinfo -n $modulename)
+            sudo /usr/src/linux-headers-"$(uname -r)"/scripts/sign-file sha256 "$loc"/MOK.priv "$loc"/MOK.der "$(modinfo -n "$modulename")"
 
             # check module is signed:
-            tail $(modinfo -n $modulename) | grep "Module signature appended"
+            tail "$(modinfo -n "$modulename")" | grep "Module signature appended"
 
             # register signing key:
-            sudo mokutil --import $loc/MOK.der
+            sudo mokutil --import "$loc"/MOK.der
 
         fi
     }
@@ -66,10 +66,10 @@
         else 
 
             # sign module:
-            sudo /usr/src/linux-headers-$(uname -r)/scripts/sign-file sha256 $loc/MOK.priv $loc/MOK.der $(modinfo -n $modulename)
+            sudo /usr/src/linux-headers-"$(uname -r)"/scripts/sign-file sha256 "$loc"/MOK.priv "$loc"/MOK.der "$(modinfo -n "$modulename")"
 
             # check module is signed:
-            tail $(modinfo -n $modulename) | grep "Module signature appended"
+            tail "$(modinfo -n "$modulename")" | grep "Module signature appended"
 
             # register signing key:
             sudo mokutil --import $loc/MOK.der
@@ -106,12 +106,12 @@
             echo ""
 
             # signing key enrollment status
-            echo "Signing key enrollment status: $(mokutil --test-key $loc/MOK.der)"
+            echo "Signing key enrollment status: $(mokutil --test-key "$loc"/MOK.der)"
 
             echo ""
 
             # check module is signed:
-            echo "Module signing status: $(tail $(modinfo -n $modulename) | grep "Module signature appended")"           
+            echo "Module signing status: $(tail "$(modinfo -n "$modulename")" | grep "Module signature appended")"
 
         fi
     }
