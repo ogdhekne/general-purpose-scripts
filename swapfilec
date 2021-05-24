@@ -6,65 +6,83 @@
 #---------------------------------------------------------------------------------------------------------------#
 
 # Environment variables:
-  location="$2"
-  size="$3"
-  rev="v1.1"
+  LOCATION="$2"
+  SIZE="$3"
+  REV="v1.1"
   source /etc/os-release
 
 # Functions:
 
-  # Create Swapfile
+  # Create Empty file
   create()
   {
     # Commad will change based on distro:
     if [ "$ID_LIKE" = "debian" ]; then
         # Below command for debian based distro.:
-        fallocate -l $size $location
+        echo -e "Creating empty file on ${PRETTY_NAME}:"
+        fallocate -l $SIZE ${LOCATION}
     elif [ "$ID_LIKE" = "rhel fedora" ]; then
         # Below command for rhel/fedora based distro.:
-        dd if=/dev/zero of=$location bs=1 count=0 seek=$size
+        echo -e "Creating empty file on ${PRETTY_NAME}:"
+        dd if=/dev/zero of=${LOCATION} bs=1 count=0 seek=$SIZE
     fi
 
-  chmod 0600 $location
+  # Providing read-write permissions for ${LOCATION}:
+  echo -e "\n Providing read-write permissions for ${LOCATION}:"
+  chmod 0600 ${LOCATION}
 
-  mkswap $location
+  echo -e "\n Create swapfile on ${LOCATION}"
+  mkswap ${LOCATION}
 
-  swapon $location
+  echo -e "\n Create swap entry on fstab file:"
+  echo "${LOCATION} none            swap    sw              0       0" | tee --append /etc/fstab
 
-  echo "$location none            swap    sw              0       0" | tee --append /etc/fstab
-
+  echo -e "\n Create swappiness entry in sysctl.conf:"
   echo "vm.swappiness=100" | tee --append /etc/sysctl.conf
+
+  echo -e "Swap on to ${LOCATION}:"
+  swapon ${LOCATION}
 
   echo -e "\n Kernel Parameters:"
   sysctl -p
 
-  echo -e "\n Current Swap locations:"
+  echo -e "\n Current Swap LOCATIONs:"
   swapon -s
 
   echo -e "\n Memory and Swap utilization:"
-  free -m
+  free -h
 
-  echo -e  "\n DONE"
+  echo -e  "\n Swapfile created successfully."
   }
 
   # Delete Swapfile.
   delete()
   {
-  swapoff $location
+  echo -e "\n Turning off swap: ${LOCATION}:"
+  swapoff ${LOCATION} && \
 
+  echo -e "\n Removing swap entry from fstab file:" 
   sed --in-place '/swap/d' /etc/fstab
 
-  rm -rf $location
-
+  echo -e "\n Removing swappiness entry from sysctl.conf:"
   sed --in-place '/swappiness/d' /etc/sysctl.conf
 
-  echo -e "\n Current Swap locations:"
+  echo -e "\n Kernel Parameters:"
+  sysctl -p
+
+  echo -e "\n Removing swapfile ${LOCATION}:"
+  rm -rf ${LOCATION}
+
+  echo -e "\n Current Swap LOCATIONs:"
   swapon -s
 
-  echo -e "\n Memory and Swap utilization:"
-  free -m
+  echo -e "\n Current swappiness value:"
+  cat /proc/sys/vm/swappiness
 
-  echo -e  "\n DONE"
+  echo -e "\n Memory and Swap utilization:"
+  free -h
+
+  echo -e  "\n Successfully removed swapfile."
   }
 
   # Check status:
@@ -72,15 +90,18 @@
   {
   cat << EOF
   +--------------------------+
-  +  Swapfile Utility: $rev  +
+  +  Swapfile Utility: $REV  +
   +--------------------------+
 EOF
 
-  echo -e "\n Memory and Swap utilization:"
-  free -m
+  echo -e "\n Current memory and swap utilization:"
+  free -h
 
-  echo -e "\n Current Swap locations:"
+  echo -e "\n Current swap LOCATIONs:"
   swapon -s
+
+  echo -e "\n Runtime swappiness value:"
+  cat /proc/sys/vm/swappiness
   }
 
 
@@ -89,10 +110,10 @@ EOF
   {
   cat <<EOF
   +--------------------------+
-  +  Swapfile Utility: $rev  +
+  +  Swapfile Utility: $REV  +
   +--------------------------+
-  create:  $0 create <location> <size>
-  delete:  $0 delete <location>
+  create:  $0 create <LOCATION> <SIZE>
+  delete:  $0 delete <LOCATION>
   status:  $0 status
   help:    $0 help  
 
