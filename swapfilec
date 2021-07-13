@@ -17,14 +17,14 @@
   create()
   {
     # Commad will change based on distro:
-    if [ "$ID_LIKE" = "debian" ]; then
+    if [ "${ID_LIKE}" = "debian" ]; then
         # Below command for debian based distro.:
         echo -e "Creating empty file on ${PRETTY_NAME}:"
-        fallocate -l $SIZE ${LOCATION}
-    elif [ "$ID_LIKE" = "rhel fedora" ]; then
+        fallocate -l ${SIZE} ${LOCATION}
+    elif [ "${ID_LIKE}" = "rhel fedora" ]; then
         # Below command for rhel/fedora based distro.:
         echo -e "Creating empty file on ${PRETTY_NAME}:"
-        dd if=/dev/zero of=${LOCATION} bs=1 count=0 seek=$SIZE
+        dd if=/dev/zero of=${LOCATION} bs=${SIZE} count=1
     fi
 
   # Providing read-write permissions for ${LOCATION}:
